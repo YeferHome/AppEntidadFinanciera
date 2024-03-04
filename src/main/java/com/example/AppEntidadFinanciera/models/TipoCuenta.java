@@ -1,2 +1,6 @@
-package com.example.AppEntidadFinanciera.models;public enum TipoCuenta {
+package com.example.AppEntidadFinanciera.models;
+
+public enum TipoCuenta {
+    AHORRO,
+    CORRIENTE
 }

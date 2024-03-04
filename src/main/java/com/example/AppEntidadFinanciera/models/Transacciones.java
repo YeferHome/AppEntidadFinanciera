@@ -20,8 +20,7 @@ public class Transacciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private enum tipotransaccion{Consignacion,Retiro,Transferencia}
+    private Tipotransaccion tipotransaccion;
     private BigDecimal monto;
-    private BigDecimal fechacreacion;
-
+    private BigDecimal fechaCreacion;
 }

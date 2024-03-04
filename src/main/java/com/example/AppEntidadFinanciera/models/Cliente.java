@@ -22,14 +22,14 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipoidentidad;
-    private String numidentidad;
+    private String tipoIdentidad;
+    private String numIdentidad;
     private String nombres;
     private String apellido;
     private int edad;
     private String correo;
-    private LocalDate fechanacimiento;
-    private LocalDateTime fechacreacion;
-    private LocalDateTime fechamodificacion;
+    private LocalDate fechaNacimiento;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaModificacion;
 
 }

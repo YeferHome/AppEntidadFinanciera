@@ -22,11 +22,11 @@ public class ProductoFinanciero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private enum tipocuenta{cuenta_corriente,cuenta_ahorros}
-    private String numcuenta;
-    private enum estado{Activa,Inactiva,Cancelada}
+    private TipoCuenta tipoCuenta;
+    private String numCuenta;
+    private Estado estado;
     private BigDecimal saldo;
     private Boolean exentaGMF;
-    private LocalDateTime fechacreacion;
-    private LocalDateTime fechamodificacion;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaModificacion;
 }
