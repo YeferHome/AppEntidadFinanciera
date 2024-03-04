@@ -25,7 +25,7 @@ public class Cliente {
     private String tipoIdentidad;
     private String numIdentidad;
     private String nombres;
-    private String apellido;
+    private String apellidos;
     private int edad;
     private String correo;
     private LocalDate fechaNacimiento;
