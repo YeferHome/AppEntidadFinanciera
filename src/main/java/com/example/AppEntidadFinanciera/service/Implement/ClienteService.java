@@ -5,9 +5,13 @@ import com.example.AppEntidadFinanciera.mapper.RequestMapperDTO;
 import com.example.AppEntidadFinanciera.models.Cliente;
 import com.example.AppEntidadFinanciera.repository.ClienteRepository;
 import com.example.AppEntidadFinanciera.service.IClienteService;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -19,8 +23,17 @@ public class ClienteService implements IClienteService {
 
     @Override
     public void createCliente(RequestClienteDTO requestClienteDTO) {
-        Cliente saveInformation = RequestMapperDTO.dtoToRequestDto(requestClienteDTO);
-        clienteRepository.save(saveInformation);
+        LocalDate fechaNacimiento = requestClienteDTO.getFechaNacimiento();
+        LocalDate fechaHoy = LocalDate.now();
+
+        Period edad = Period.between(fechaNacimiento, fechaHoy);
+
+        if (edad.getYears() < 18) {
+            throw new ConstraintViolationException("El cliente debe tener al menos 18 años", null);
+        }
+        Cliente cliente = RequestMapperDTO.clienteToDto(requestClienteDTO);
+        cliente.setFechaCreacion(LocalDateTime.now());
+        clienteRepository.save(cliente);
     }
 
     @Override
@@ -36,20 +49,19 @@ public class ClienteService implements IClienteService {
     @Override
     public void updateCliente(Long cliente_Id, RequestClienteDTO updateClienteDTO) {
         Cliente cliente = clienteRepository.findById(cliente_Id).orElse(null);
-        Cliente clienteActualizado = requestMapperDTO.dtoToRequestDto(updateClienteDTO);
+        Cliente clienteActualizado = requestMapperDTO.clienteToDto(updateClienteDTO);
         cliente.setTipoIdentidad(clienteActualizado.getTipoIdentidad());
         cliente.setNumIdentidad(clienteActualizado.getNumIdentidad());
         cliente.setNombres(clienteActualizado.getNombres());
         cliente.setApellidos(clienteActualizado.getApellidos());
-        cliente.setEdad(clienteActualizado.getEdad());
         cliente.setCorreo(clienteActualizado.getCorreo());
         cliente.setFechaNacimiento(clienteActualizado.getFechaNacimiento());
-        cliente.setFechaCreacion(clienteActualizado.getFechaCreacion());
-        cliente.setFechaModificacion(clienteActualizado.getFechaModificacion());
+        cliente.setFechaModificacion(LocalDateTime.now());
+        clienteRepository.save(cliente);
     }
 
     @Override
     public void deleteCliente(Long cliente_Id) {
-
+        clienteRepository.deleteById(cliente_Id);
     }
 }

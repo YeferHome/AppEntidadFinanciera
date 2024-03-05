@@ -23,10 +23,9 @@ public class Cliente {
     private Long id;
 
     private String tipoIdentidad;
-    private String numIdentidad;
+    private int numIdentidad;
     private String nombres;
     private String apellidos;
-    private int edad;
     private String correo;
     private LocalDate fechaNacimiento;
     private LocalDateTime fechaCreacion;

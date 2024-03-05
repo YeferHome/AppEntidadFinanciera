@@ -1,7 +1,9 @@
 package com.example.AppEntidadFinanciera.mapper;
 
 import com.example.AppEntidadFinanciera.DTO.RequestClienteDTO;
+import com.example.AppEntidadFinanciera.DTO.RequestProductoDTO;
 import com.example.AppEntidadFinanciera.models.Cliente;
+import com.example.AppEntidadFinanciera.models.ProductoFinanciero;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -9,17 +11,24 @@ import java.time.LocalDate;
 @Component
 public class RequestMapperDTO {
 
-    public static Cliente dtoToRequestDto(RequestClienteDTO requestClienteDTO){
+    public static Cliente clienteToDto(RequestClienteDTO requestClienteDTO){
         Cliente cliente = new Cliente();
         cliente.setTipoIdentidad(requestClienteDTO.getTipoIdentidad());
         cliente.setNumIdentidad(requestClienteDTO.getNumIdentidad());
         cliente.setNombres(requestClienteDTO.getNombres());
         cliente.setApellidos(requestClienteDTO.getApellidos());
-        cliente.setEdad(requestClienteDTO.getEdad());
         cliente.setCorreo(requestClienteDTO.getCorreo());
         cliente.setFechaNacimiento(requestClienteDTO.getFechaNacimiento());
-        cliente.setFechaCreacion(requestClienteDTO.getFechaCreacion());
-        cliente.setFechaModificacion(requestClienteDTO.getFechaModificacion());
         return cliente;
     }
+    public static ProductoFinanciero productoToDto(RequestProductoDTO requestProductoDTO){
+        ProductoFinanciero productoFinanciero = new ProductoFinanciero();
+        productoFinanciero.setTipoCuenta(requestProductoDTO.getTipoCuenta());
+        productoFinanciero.setNumCuenta(requestProductoDTO.getNumCuenta());
+        productoFinanciero.setEstado(requestProductoDTO.getEstado());
+        productoFinanciero.setSaldo(requestProductoDTO.getSaldo());
+        productoFinanciero.setExentaGMF(requestProductoDTO.getExentaGMF());
+        return productoFinanciero;
+    }
+
 }
