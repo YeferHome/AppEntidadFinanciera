@@ -1,34 +1,33 @@
 package com.example.AppEntidadFinanciera.mapper;
 
-import com.example.AppEntidadFinanciera.DTO.RequestClienteDTO;
-import com.example.AppEntidadFinanciera.DTO.RequestProductoDTO;
-import com.example.AppEntidadFinanciera.models.Cliente;
-import com.example.AppEntidadFinanciera.models.ProductoFinanciero;
+import com.example.AppEntidadFinanciera.DTO.RequestClientDTO;
+import com.example.AppEntidadFinanciera.DTO.RequestProductDTO;
+import com.example.AppEntidadFinanciera.entity.Client;
+import com.example.AppEntidadFinanciera.entity.FinancialProduct;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component
 public class RequestMapperDTO {
 
-    public static Cliente clienteToDto(RequestClienteDTO requestClienteDTO){
-        Cliente cliente = new Cliente();
-        cliente.setTipoIdentidad(requestClienteDTO.getTipoIdentidad());
-        cliente.setNumIdentidad(requestClienteDTO.getNumIdentidad());
-        cliente.setNombres(requestClienteDTO.getNombres());
-        cliente.setApellidos(requestClienteDTO.getApellidos());
-        cliente.setCorreo(requestClienteDTO.getCorreo());
-        cliente.setFechaNacimiento(requestClienteDTO.getFechaNacimiento());
-        return cliente;
+    public static Client clientToDto(RequestClientDTO requestClientDTO){
+        Client client = new Client();
+        client.setIdentificationType(requestClientDTO.getIdentityType());
+        client.setFirstName(requestClientDTO.getFirstName());
+        client.setLastName(requestClientDTO.getLastName());
+        client.setEmail(requestClientDTO.getEmail());
+        client.setBirthDate(requestClientDTO.getBirthDate());
+        return client;
     }
-    public static ProductoFinanciero productoToDto(RequestProductoDTO requestProductoDTO){
-        ProductoFinanciero productoFinanciero = new ProductoFinanciero();
-        productoFinanciero.setTipoCuenta(requestProductoDTO.getTipoCuenta());
-        productoFinanciero.setNumCuenta(requestProductoDTO.getNumCuenta());
-        productoFinanciero.setEstado(requestProductoDTO.getEstado());
-        productoFinanciero.setSaldo(requestProductoDTO.getSaldo());
-        productoFinanciero.setExentaGMF(requestProductoDTO.getExentaGMF());
-        return productoFinanciero;
+
+    public static FinancialProduct productToDto(RequestProductDTO requestProductDTO, Client client){
+        FinancialProduct financialProduct = new FinancialProduct();
+        financialProduct.setAccountType(requestProductDTO.getAccountType());
+        financialProduct.setAccountNumber(requestProductDTO.getAccountNumber());
+        financialProduct.setStatus(requestProductDTO.getStatus());
+        financialProduct.setBalance(requestProductDTO.getBalance());
+        financialProduct.setExemptFromGMF(requestProductDTO.getExemptFromGMF());
+        financialProduct.setClient(client);
+        return financialProduct;
     }
 
 }
