@@ -1,6 +1,7 @@
 package com.example.AppEntidadFinanciera.DTO;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class RequestClientDTO {
 
@@ -10,6 +11,14 @@ public class RequestClientDTO {
     private String lastName;
     private String email;
     private LocalDate birthDate;
+    private LocalDateTime creationDate;
+
+
+    //GETTER
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
 
     public String getIdentityType() {
         return identityType;

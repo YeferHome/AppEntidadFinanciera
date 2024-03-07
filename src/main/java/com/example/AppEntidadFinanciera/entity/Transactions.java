@@ -14,7 +14,8 @@ public class Transactions {
 
     private TransactionType transactionType;
     private BigDecimal amount;
-    private LocalDateTime creationDate;
+    private LocalDateTime sendDate;
+
 
     @ManyToOne
     @JoinColumn(name = "productId")
@@ -22,11 +23,11 @@ public class Transactions {
 
 
     // Constructors
-    public Transactions(Long id, TransactionType transactionType, BigDecimal amount, LocalDateTime creationDate) {
+    public Transactions(Long id, TransactionType transactionType, BigDecimal amount, LocalDateTime sendDate) {
         this.id = id;
         this.transactionType = transactionType;
         this.amount = amount;
-        this.creationDate = creationDate;
+        this.sendDate = sendDate;
     }
 
     public Transactions() {
@@ -58,11 +59,19 @@ public class Transactions {
         this.amount = amount;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public LocalDateTime getSendDate() {
+        return sendDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setSendDate(LocalDateTime creationDate) {
+        this.sendDate = creationDate;
     }
+
+    public FinancialProduct getProduct() {
+        return product;
+    }
+    public void setProduct(FinancialProduct product) {
+        this.product = product;
+    }
+
 }

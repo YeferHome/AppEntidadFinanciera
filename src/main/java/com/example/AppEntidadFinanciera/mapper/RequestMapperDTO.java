@@ -12,10 +12,12 @@ public class RequestMapperDTO {
     public static Client clientToDto(RequestClientDTO requestClientDTO){
         Client client = new Client();
         client.setIdentificationType(requestClientDTO.getIdentityType());
+        client.setIdentityNumber(requestClientDTO.getIdentityNumber());
         client.setFirstName(requestClientDTO.getFirstName());
         client.setLastName(requestClientDTO.getLastName());
         client.setEmail(requestClientDTO.getEmail());
         client.setBirthDate(requestClientDTO.getBirthDate());
+        client.setCreationDate(requestClientDTO.getCreationDate());
         return client;
     }
 

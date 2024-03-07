@@ -15,7 +15,7 @@ public class Client {
     private Long id;
 
     private String identificationType;
-    private int identificationNumber;
+    private int identityNumber;
     private String firstName;
     private String lastName;
     private String email;
@@ -28,7 +28,7 @@ public class Client {
     public Client(Long id, String identificationType, int identificationNumber, String firstName, String lastName, String email, LocalDate birthDate, LocalDateTime creationDate, LocalDateTime modificationDate) {
         this.id = id;
         this.identificationType = identificationType;
-        this.identificationNumber = identificationNumber;
+        this.identityNumber = identityNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -58,12 +58,12 @@ public class Client {
         this.identificationType = identificationType;
     }
 
-    public int getIdentificationNumber() {
-        return identificationNumber;
+    public int getIdentityNumber() {
+        return identityNumber;
     }
 
-    public void setIdentificationNumber(int identificationNumber) {
-        this.identificationNumber = identificationNumber;
+    public void setIdentityNumber(int identityNumber) {
+        this.identityNumber = identityNumber;
     }
 
     public String getFirstName() {
@@ -98,8 +98,8 @@ public class Client {
         this.birthDate = birthDate;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public LocalDateTime getCreationDate(LocalDateTime creationDate) {
+        return this.creationDate;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {

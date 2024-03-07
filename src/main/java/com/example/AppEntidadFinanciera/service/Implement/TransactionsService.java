@@ -26,39 +26,46 @@ public class TransactionsService implements ITransactionsService {
     }
 
     @Override
-    public void makeDeposit(Long productId, Transactions deposit) {
+    public void makeDeposit(Long productId, BigDecimal depositAmount) {
         FinancialProduct financialProduct = financialProductRepository.findById(productId).orElse(null);
-        BigDecimal newBalance = financialProduct.getBalance().add(deposit.getAmount());
+
+        BigDecimal newBalance = financialProduct.getBalance().add(depositAmount);
         financialProduct.setBalance(newBalance);
         financialProductRepository.save(financialProduct);
 
+        Transactions deposit = new Transactions();
+        deposit.setAmount(depositAmount);
         deposit.setTransactionType(TransactionType.DEPOSIT);
-        deposit.setCreationDate(LocalDateTime.now());
+        deposit.setSendDate(LocalDateTime.now());
         transactionsRepository.save(deposit);
     }
 
     @Override
-    public void makeWithdrawal(Long productId, Transactions withdrawal) {
+    public void makeWithdrawal(Long productId, BigDecimal withdrawalAmount) {
+        if (withdrawalAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El monto de retiro debe ser mayor que cero.");
+        }
+
         FinancialProduct financialProduct = financialProductRepository.findById(productId).orElse(null);
-        BigDecimal currentBalance = financialProduct.getBalance();
-        BigDecimal withdrawalAmount = withdrawal.getAmount();
-        if (currentBalance.compareTo(withdrawalAmount) >= 0) {
-            BigDecimal newBalance = currentBalance.subtract(withdrawalAmount);
+
+        if (financialProduct.getBalance().compareTo(withdrawalAmount) >= 0) {
+            BigDecimal newBalance = financialProduct.getBalance().subtract(withdrawalAmount);
             financialProduct.setBalance(newBalance);
             financialProductRepository.save(financialProduct);
 
+            Transactions withdrawal = new Transactions();
+            withdrawal.setAmount(withdrawalAmount);
             withdrawal.setTransactionType(TransactionType.WITHDRAWAL);
-            withdrawal.setCreationDate(LocalDateTime.now());
+            withdrawal.setSendDate(LocalDateTime.now());
             transactionsRepository.save(withdrawal);
         }
     }
 
     @Override
-    public void makeTransfer(Long sourceAccountId, Long destinationAccountId, Transactions transfer) {
+    public void makeTransfer(Long sourceAccountId, Long destinationAccountId, BigDecimal transferAmount) {
         FinancialProduct sourceAccount = financialProductRepository.findById(sourceAccountId).orElse(null);
         FinancialProduct destinationAccount = financialProductRepository.findById(destinationAccountId).orElse(null);
 
-        BigDecimal transferAmount = transfer.getAmount();
         if (sourceAccount.getBalance().compareTo(transferAmount) > 0) {
             BigDecimal newBalanceSource = sourceAccount.getBalance().subtract(transferAmount);
             BigDecimal newBalanceDestination = destinationAccount.getBalance().add(transferAmount);
@@ -72,13 +79,13 @@ public class TransactionsService implements ITransactionsService {
             Transactions sourceTransaction = new Transactions();
             sourceTransaction.setTransactionType(TransactionType.TRANSFER);
             sourceTransaction.setAmount(transferAmount.negate());
-            sourceTransaction.setCreationDate(LocalDateTime.now());
+            sourceTransaction.setSendDate(LocalDateTime.now());
             transactionsRepository.save(sourceTransaction);
 
             Transactions destinationTransaction = new Transactions();
             destinationTransaction.setTransactionType(TransactionType.TRANSFER);
             destinationTransaction.setAmount(transferAmount);
-            destinationTransaction.setCreationDate(LocalDateTime.now());
+            destinationTransaction.setSendDate(LocalDateTime.now());
             transactionsRepository.save(destinationTransaction);
         }
     }
@@ -90,7 +97,16 @@ public class TransactionsService implements ITransactionsService {
 
     @Override
     public List<Transactions> findTransactionsByProductId(Long productId) {
-        return transactionsRepository.findByProduct_Id(productId);
+        List<Transactions> transactions = transactionsRepository.findByProduct_Id(productId);
+
+        for (Transactions transaction : transactions) {
+            FinancialProduct product = transaction.getProduct();
+
+            if (product != null) {
+                transaction.setProduct(product);
+            }
+        }
+        return transactions;
     }
 
 }

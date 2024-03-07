@@ -56,7 +56,7 @@ public class ClientServiceImpl implements IClientService {
         if (client != null) {
             Client updatedClient = requestMapperDTO.clientToDto(updateClientDTO);
             client.setIdentificationType(updatedClient.getIdentificationType());
-            client.setIdentificationNumber(updatedClient.getIdentificationNumber());
+            client.setIdentityNumber(updatedClient.getIdentityNumber());
             client.setFirstName(updatedClient.getFirstName());
             client.setLastName(updatedClient.getLastName());
             client.setEmail(updatedClient.getEmail());
