@@ -11,7 +11,7 @@ public class RequestMapperDTO {
 
     public static Client clientToDto(RequestClientDTO requestClientDTO){
         Client client = new Client();
-        client.setIdentificationType(requestClientDTO.getIdentityType());
+        client.setIdentificationType(requestClientDTO.getIdentificationType());
         client.setIdentityNumber(requestClientDTO.getIdentityNumber());
         client.setFirstName(requestClientDTO.getFirstName());
         client.setLastName(requestClientDTO.getLastName());
