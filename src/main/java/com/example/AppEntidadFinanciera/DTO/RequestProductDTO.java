@@ -28,4 +28,20 @@ public class RequestProductDTO {
     public Boolean getExemptFromGMF() {
         return exemptFromGMF;
     }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public void setExemptFromGMF(Boolean exemptFromGMF) {
+        this.exemptFromGMF = exemptFromGMF;
+    }
 }

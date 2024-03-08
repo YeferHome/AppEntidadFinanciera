@@ -2,10 +2,12 @@ package com.example.AppEntidadFinanciera.service.Implement;
 
 import com.example.AppEntidadFinanciera.DTO.RequestClientDTO;
 import com.example.AppEntidadFinanciera.entity.Client;
+import com.example.AppEntidadFinanciera.entity.FinancialProduct;
 import com.example.AppEntidadFinanciera.mapper.Mappers;
 import com.example.AppEntidadFinanciera.repository.ClientRepository;
+import com.example.AppEntidadFinanciera.repository.FinancialProductRepository;
 import com.example.AppEntidadFinanciera.service.IClientService;
-import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,29 +20,32 @@ public class ClientServiceImpl implements IClientService {
 
     private final ClientRepository clientRepository;
     private final Mappers mappers;
+    private final FinancialProductRepository financialProductRepository;
 
-    public ClientServiceImpl(ClientRepository clientRepository, Mappers mappers) {
+    public ClientServiceImpl(ClientRepository clientRepository, Mappers mappers, FinancialProductRepository financialProductRepository) {
         this.clientRepository = clientRepository;
         this.mappers = mappers;
+        this.financialProductRepository = financialProductRepository;
     }
 
     @Override
     public void createClient(RequestClientDTO requestClientDTO) {
-    try {
-        LocalDate birthDate = requestClientDTO.getBirthDate();
-        LocalDate today = LocalDate.now();
+        try {
+            LocalDate birthDate = requestClientDTO.getBirthDate();
+            LocalDate today = LocalDate.now();
 
-        Period age = Period.between(birthDate, today);
+            Period age = Period.between(birthDate, today);
 
-        if (age.getYears() < 18) {
-            throw new ConstraintViolationException("El cliente debe tener al menos 18 años de edad", null);
-        }
-        Client client = Mappers.clientToDto(requestClientDTO);
-        clientRepository.save(client);
-        } catch (ConstraintViolationException captuex) {
-        throw new IllegalArgumentException("Error al crear el cliente: " + captuex.getMessage());
+            if (age.getYears() < 18) {
+                throw new javax.validation.ConstraintViolationException("El cliente debe tener al menos 18 años de edad", null);
+            }
+            Client client = Mappers.clientToDto(requestClientDTO);
+            clientRepository.save(client);
+        } catch (javax.validation.ConstraintViolationException captuex) {
+            throw new javax.validation.ConstraintViolationException("El cliente debe tener al menos 18 años de edad", null);
         }
     }
+
 
     @Override
     public Client findClientById(Long clientId) {
@@ -74,14 +79,22 @@ public class ClientServiceImpl implements IClientService {
             throw new RuntimeException("Error al actualizar el cliente: " + ex.getMessage());
         }
     }
-
     @Override
     public void deleteClient(Long clientId) {
         try {
-            clientRepository.deleteById(clientId);
+            List<FinancialProduct> financialProducts = financialProductRepository.findByClientId(clientId);
+            if (!financialProducts.isEmpty()) {
+                throw new DataIntegrityViolationException("El cliente no puede ser eliminado porque tiene productos financieros vinculados");
+            }
 
-        }catch (Exception ex){
-            throw new RuntimeException("Error Un cliente no podrá ser eliminado si tiene productos vinculados");
+            clientRepository.deleteById(clientId);
+        } catch (DataIntegrityViolationException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al intentar eliminar al cliente: " + ex.getMessage(), ex);
         }
     }
+
+
+
 }

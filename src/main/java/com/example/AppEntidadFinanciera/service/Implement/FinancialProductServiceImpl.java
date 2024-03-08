@@ -24,6 +24,7 @@ public class FinancialProductServiceImpl implements IFinancialProductService {
     public FinancialProductServiceImpl(FinancialProductRepository financialProductRepository, IClientService clientService) {
         this.financialProductRepository = financialProductRepository;
         this.clientService = clientService;
+
     }
 
     @Override
@@ -46,8 +47,10 @@ public class FinancialProductServiceImpl implements IFinancialProductService {
             financialProduct.setClient(client);
 
             financialProductRepository.save(financialProduct);
-        }catch(Exception ex){
-            throw new IllegalArgumentException("Error Cuenta no creada");
+        } catch (IllegalArgumentException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Error Cuenta no creada", ex);
         }
     }
 
