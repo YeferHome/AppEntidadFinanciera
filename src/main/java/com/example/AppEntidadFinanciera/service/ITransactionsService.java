@@ -3,7 +3,6 @@ package com.example.AppEntidadFinanciera.service;
 import com.example.AppEntidadFinanciera.entity.Transactions;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public interface ITransactionsService {
 
@@ -14,7 +13,5 @@ public interface ITransactionsService {
     void makeTransfer(Long sourceAccountId, Long destinationAccountId, BigDecimal transfer);
 
     Transactions findTransactionById(Long transactionId);
-
-    List<Transactions> findTransactionsByProductId(Long productId);
 
 }

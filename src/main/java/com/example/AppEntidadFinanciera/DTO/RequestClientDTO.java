@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class RequestClientDTO {
 
-    private String identityType;
+    private String identificationType;
     private int identityNumber;
     private String firstName;
     private String lastName;
@@ -20,8 +20,8 @@ public class RequestClientDTO {
         return creationDate;
     }
 
-    public String getIdentityType() {
-        return identityType;
+    public String getIdentificationType() {
+        return identificationType;
     }
 
     public int getIdentityNumber() {
@@ -42,5 +42,33 @@ public class RequestClientDTO {
 
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
+    }
+
+    public void setIdentityNumber(int identityNumber) {
+        this.identityNumber = identityNumber;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 }

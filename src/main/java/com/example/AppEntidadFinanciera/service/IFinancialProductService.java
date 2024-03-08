@@ -2,7 +2,6 @@ package com.example.AppEntidadFinanciera.service;
 
 import com.example.AppEntidadFinanciera.DTO.RequestProductDTO;
 import com.example.AppEntidadFinanciera.entity.FinancialProduct;
-import com.example.AppEntidadFinanciera.entity.Transactions;
 
 import java.util.List;
 

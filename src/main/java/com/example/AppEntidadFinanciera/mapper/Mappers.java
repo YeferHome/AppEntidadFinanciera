@@ -7,7 +7,7 @@ import com.example.AppEntidadFinanciera.entity.FinancialProduct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RequestMapperDTO {
+public class Mappers {
 
     public static Client clientToDto(RequestClientDTO requestClientDTO){
         Client client = new Client();
@@ -24,12 +24,10 @@ public class RequestMapperDTO {
     public static FinancialProduct productToDto(RequestProductDTO requestProductDTO, Client client){
         FinancialProduct financialProduct = new FinancialProduct();
         financialProduct.setAccountType(requestProductDTO.getAccountType());
-        financialProduct.setAccountNumber(requestProductDTO.getAccountNumber());
         financialProduct.setStatus(requestProductDTO.getStatus());
         financialProduct.setBalance(requestProductDTO.getBalance());
         financialProduct.setExemptFromGMF(requestProductDTO.getExemptFromGMF());
         financialProduct.setClient(client);
         return financialProduct;
     }
-
 }

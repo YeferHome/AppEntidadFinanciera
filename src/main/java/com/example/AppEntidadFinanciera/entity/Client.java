@@ -1,12 +1,10 @@
 package com.example.AppEntidadFinanciera.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Client {
@@ -22,6 +20,10 @@ public class Client {
     private LocalDate birthDate;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<FinancialProduct> financialProducts;
+
 
     // CONSTRUCTORS
 
@@ -98,7 +100,7 @@ public class Client {
         this.birthDate = birthDate;
     }
 
-    public LocalDateTime getCreationDate(LocalDateTime creationDate) {
+    public LocalDateTime getCreationDate() {
         return this.creationDate;
     }
 

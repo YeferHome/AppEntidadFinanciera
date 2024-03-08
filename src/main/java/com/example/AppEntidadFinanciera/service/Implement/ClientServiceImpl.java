@@ -1,8 +1,8 @@
-package com.example.AppEntidadFinanciera.service.implement;
+package com.example.AppEntidadFinanciera.service.Implement;
 
 import com.example.AppEntidadFinanciera.DTO.RequestClientDTO;
-import com.example.AppEntidadFinanciera.mapper.RequestMapperDTO;
 import com.example.AppEntidadFinanciera.entity.Client;
+import com.example.AppEntidadFinanciera.mapper.Mappers;
 import com.example.AppEntidadFinanciera.repository.ClientRepository;
 import com.example.AppEntidadFinanciera.service.IClientService;
 import jakarta.validation.ConstraintViolationException;
@@ -17,27 +17,29 @@ import java.util.List;
 public class ClientServiceImpl implements IClientService {
 
     private final ClientRepository clientRepository;
-    private final RequestMapperDTO requestMapperDTO;
+    private final Mappers mappers;
 
-    public ClientServiceImpl(ClientRepository clientRepository, RequestMapperDTO requestMapperDTO) {
+    public ClientServiceImpl(ClientRepository clientRepository, Mappers mappers) {
         this.clientRepository = clientRepository;
-        this.requestMapperDTO = requestMapperDTO;
+        this.mappers = mappers;
     }
 
     @Override
     public void createClient(RequestClientDTO requestClientDTO) {
-
+    try {
         LocalDate birthDate = requestClientDTO.getBirthDate();
         LocalDate today = LocalDate.now();
 
         Period age = Period.between(birthDate, today);
 
         if (age.getYears() < 18) {
-            throw new ConstraintViolationException("The client must be at least 18 years old", null);
+            throw new ConstraintViolationException("El cliente debe tener al menos 18 años de edad", null);
         }
-        Client client = RequestMapperDTO.clientToDto(requestClientDTO);
-        client.setBirthDate(LocalDate.from(LocalDateTime.now()));
+        Client client = Mappers.clientToDto(requestClientDTO);
         clientRepository.save(client);
+        } catch (ConstraintViolationException captuex) {
+        throw new IllegalArgumentException("Error al crear el cliente: " + captuex.getMessage());
+        }
     }
 
     @Override
@@ -50,25 +52,36 @@ public class ClientServiceImpl implements IClientService {
         return clientRepository.findAll();
     }
 
+
     @Override
     public void updateClient(Long clientId, RequestClientDTO updateClientDTO) {
-        Client client = clientRepository.findById(clientId).orElse(null);
-        if (client != null) {
-            Client updatedClient = requestMapperDTO.clientToDto(updateClientDTO);
-            client.setIdentificationType(updatedClient.getIdentificationType());
-            client.setIdentityNumber(updatedClient.getIdentityNumber());
-            client.setFirstName(updatedClient.getFirstName());
-            client.setLastName(updatedClient.getLastName());
-            client.setEmail(updatedClient.getEmail());
-            client.setBirthDate(updatedClient.getBirthDate());
-            client.setModificationDate(LocalDateTime.now());
+        try {
+            Client client = clientRepository.findById(clientId).orElse(null);
+            if (client != null) {
+                Client updatedClient = mappers.clientToDto(updateClientDTO);
+                client.setIdentificationType(updatedClient.getIdentificationType());
+                client.setIdentityNumber(updatedClient.getIdentityNumber());
+                client.setFirstName(updatedClient.getFirstName());
+                client.setLastName(updatedClient.getLastName());
+                client.setEmail(updatedClient.getEmail());
+                client.setBirthDate(updatedClient.getBirthDate());
+                client.setCreationDate(LocalDateTime.from(LocalDateTime.now()));
+                client.setModificationDate(LocalDateTime.now());
 
-            clientRepository.save(client);
+                clientRepository.save(client);
+            }
+        }catch (Exception ex) {
+            throw new RuntimeException("Error al actualizar el cliente: " + ex.getMessage());
         }
     }
 
     @Override
     public void deleteClient(Long clientId) {
-        clientRepository.deleteById(clientId);
+        try {
+            clientRepository.deleteById(clientId);
+
+        }catch (Exception ex){
+            throw new RuntimeException("Error Un cliente no podrá ser eliminado si tiene productos vinculados");
+        }
     }
 }

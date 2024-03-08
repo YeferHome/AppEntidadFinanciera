@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 public class RequestProductDTO {
 
     private AccountType accountType;
-    private String accountNumber;
     private Status status;
     private BigDecimal balance;
     private Boolean exemptFromGMF;
@@ -17,9 +16,6 @@ public class RequestProductDTO {
         return accountType;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
 
     public Status getStatus() {
         return status;

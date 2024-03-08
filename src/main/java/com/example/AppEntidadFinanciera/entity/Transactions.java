@@ -16,11 +16,9 @@ public class Transactions {
     private BigDecimal amount;
     private LocalDateTime sendDate;
 
-
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private FinancialProduct product;
-
 
     // Constructors
     public Transactions(Long id, TransactionType transactionType, BigDecimal amount, LocalDateTime sendDate) {

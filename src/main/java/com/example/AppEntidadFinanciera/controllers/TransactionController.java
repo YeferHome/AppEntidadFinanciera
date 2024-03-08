@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/transaction")
@@ -31,9 +30,4 @@ public class TransactionController {
     public Transactions findTransactionById(@PathVariable Long transactionId){
         return transactionsService.findTransactionById(transactionId);
     }
-    @PostMapping("/list_transaction/{productId}")
-    public List<Transactions> findTransactionsByProductId(@PathVariable Long productId){
-        return transactionsService.findTransactionsByProductId(productId);
-    }
-
 }

@@ -23,6 +23,7 @@ public class FinancialProduct {
     @JoinColumn(name = "client_id")
     private Client client;
 
+
     // CONSTRUCTORS
 
     public FinancialProduct(Long id, AccountType accountType, String accountNumber, Status status, BigDecimal balance, Boolean exemptFromGMF, LocalDateTime creationDate, LocalDateTime modificationDate, Client client) {
