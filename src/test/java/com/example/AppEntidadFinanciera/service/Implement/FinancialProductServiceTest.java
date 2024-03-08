@@ -4,6 +4,7 @@ import com.example.AppEntidadFinanciera.DTO.RequestProductDTO;
 import com.example.AppEntidadFinanciera.entity.AccountType;
 import com.example.AppEntidadFinanciera.entity.Client;
 import com.example.AppEntidadFinanciera.entity.FinancialProduct;
+import com.example.AppEntidadFinanciera.entity.Status;
 import com.example.AppEntidadFinanciera.repository.FinancialProductRepository;
 import com.example.AppEntidadFinanciera.service.IClientService;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -103,16 +108,84 @@ public class FinancialProductServiceTest {
         assertEquals(null, actualProduct);
     }
 
-/*
+
     @Test
-    void findFinancialProductsByClientId() {
+    void findFinancialProductsByClientId_ReturnsListOfFinancialProducts() {
+        Long clientId = 1L;
+        List<FinancialProduct> expectedProducts = new ArrayList<>();
+        expectedProducts.add(new FinancialProduct());
+        expectedProducts.add(new FinancialProduct());
+        when(financialProductRepository.findByClientId(clientId)).thenReturn(expectedProducts);
+
+        List<FinancialProduct> actualProducts = financialProductService.findFinancialProductsByClientId(clientId);
+
+        assertEquals(expectedProducts.size(), actualProducts.size());
+        assertEquals(expectedProducts, actualProducts);
     }
 
     @Test
-    void updateFinancialProduct() {
+    void findFinancialProductsByClientId_ReturnsEmptyListWhenNoProductsFound() {
+        Long clientId = 1L;
+        List<FinancialProduct> expectedProducts = new ArrayList<>();
+        when(financialProductRepository.findByClientId(clientId)).thenReturn(expectedProducts);
+
+        List<FinancialProduct> actualProducts = financialProductService.findFinancialProductsByClientId(clientId);
+
+        assertEquals(expectedProducts.size(), actualProducts.size());
+        assertEquals(expectedProducts, actualProducts);
     }
+
+    @Test
+    void updateFinancialProduct_ProductNotFound() {
+        Long productId = 1L;
+        RequestProductDTO updatedProductDTO = new RequestProductDTO();
+
+        when(financialProductRepository.findById(productId)).thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            financialProductService.updateFinancialProduct(productId, updatedProductDTO);
+        });
+        assertEquals("No hay una cuenta para actualizar", exception.getMessage());
+        verify(financialProductRepository, never()).save(any());
+    }
+
+
+    @Test
+    void updateFinancialProduct_SuccessfullyUpdated() {
+        Long productId = 1L;
+        RequestProductDTO updatedProductDTO = new RequestProductDTO();
+        updatedProductDTO.setAccountType(AccountType.AHORRO);
+        updatedProductDTO.setStatus(Status.CANCELADA);
+        updatedProductDTO.setBalance(BigDecimal.ZERO);
+        updatedProductDTO.setExemptFromGMF(true);
+
+        FinancialProduct existingProduct = new FinancialProduct();
+        existingProduct.setId(productId);
+        existingProduct.setBalance(BigDecimal.ZERO);
+        existingProduct.setStatus(Status.ACTIVA);
+        existingProduct.setModificationDate(LocalDateTime.now().minusDays(1));
+
+        when(financialProductRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
+
+        financialProductService.updateFinancialProduct(productId, updatedProductDTO);
+
+        assertEquals(updatedProductDTO.getAccountType(), existingProduct.getAccountType());
+        assertEquals(updatedProductDTO.getStatus(), existingProduct.getStatus());
+        assertEquals(updatedProductDTO.getBalance(), existingProduct.getBalance());
+        assertEquals(updatedProductDTO.getExemptFromGMF(), existingProduct.getExemptFromGMF());
+        assertTrue(existingProduct.getModificationDate().isAfter(LocalDateTime.now().minusSeconds(1)));
+        verify(financialProductRepository, times(1)).save(existingProduct);
+    }
+
+
 
     @Test
     void deleteFinancialProduct() {
-    }*/
+        Long productId = 1L;
+
+        financialProductService.deleteFinancialProduct(productId);
+
+        verify(financialProductRepository, times(1)).deleteById(productId);
+    }
+
 }

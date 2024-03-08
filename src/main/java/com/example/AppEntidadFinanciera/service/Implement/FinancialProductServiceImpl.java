@@ -69,7 +69,7 @@ public class FinancialProductServiceImpl implements IFinancialProductService {
             String randomNumber = String.format("%08d", new Random().nextInt(100000000));
 
             return prefix + randomNumber;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException("El numero de cuenta no se genero");
         }
     }
@@ -87,14 +87,11 @@ public class FinancialProductServiceImpl implements IFinancialProductService {
 
     @Override
     public void updateFinancialProduct(Long productId, RequestProductDTO updatedProductDTO) {
-       try{
-        FinancialProduct financialProduct = financialProductRepository.findById(productId).orElse(null);
-        if (financialProduct == null) {
-            throw new IllegalArgumentException("No hay una cuenta para actualizar");
-        }
+        FinancialProduct financialProduct = financialProductRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto financiero con el ID proporcionado"));
 
         if (financialProduct.getBalance().compareTo(BigDecimal.ZERO) != 0) {
-            throw new IllegalArgumentException("No se puede cancelar la cuenta porque el saldo no es cero");
+            throw new IllegalArgumentException("No se puede cancelar la cuenta porque el saldo debe ser CERO");
         }
 
         if (!financialProduct.getStatus().equals(Status.CANCELADA)) {
@@ -108,17 +105,14 @@ public class FinancialProductServiceImpl implements IFinancialProductService {
             } else {
                 throw new IllegalArgumentException("El estado de la cuenta solo puede cambiarse a 'CANCELADA' cuando el saldo es cero");
             }
-        } else {
-            throw new IllegalArgumentException("El estado actual de la cuenta ya es 'CANCELADA'");
         }
-        }catch(Exception ex){
-           throw new IllegalArgumentException("Error al actualizar el producto financiero(CUENTA)");
-       }
     }
+
+
 
 
     @Override
     public void deleteFinancialProduct(Long productId) {
-            financialProductRepository.deleteById(productId);
+        financialProductRepository.deleteById(productId);
     }
 }
