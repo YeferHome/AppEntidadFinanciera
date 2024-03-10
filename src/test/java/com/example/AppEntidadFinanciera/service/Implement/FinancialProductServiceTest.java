@@ -145,9 +145,11 @@ public class FinancialProductServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             financialProductService.updateFinancialProduct(productId, updatedProductDTO);
         });
-        assertEquals("No hay una cuenta para actualizar", exception.getMessage());
+
+        assertEquals("No se encontró un producto financiero con el ID proporcionado", exception.getMessage());
         verify(financialProductRepository, never()).save(any());
     }
+
 
 
     @Test

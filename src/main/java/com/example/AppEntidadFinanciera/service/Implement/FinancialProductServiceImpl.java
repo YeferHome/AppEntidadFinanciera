@@ -90,23 +90,24 @@ public class FinancialProductServiceImpl implements IFinancialProductService {
         FinancialProduct financialProduct = financialProductRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto financiero con el ID proporcionado"));
 
-        if (financialProduct.getBalance().compareTo(BigDecimal.ZERO) != 0) {
-            throw new IllegalArgumentException("No se puede cancelar la cuenta porque el saldo debe ser CERO");
-        }
-
-        if (!financialProduct.getStatus().equals(Status.CANCELADA)) {
-            if (updatedProductDTO.getStatus().equals(Status.CANCELADA)) {
-                financialProduct.setAccountType(updatedProductDTO.getAccountType());
-                financialProduct.setStatus(updatedProductDTO.getStatus());
-                financialProduct.setBalance(updatedProductDTO.getBalance());
-                financialProduct.setExemptFromGMF(updatedProductDTO.getExemptFromGMF());
-                financialProduct.setModificationDate(LocalDateTime.now());
-                financialProductRepository.save(financialProduct);
-            } else {
+        if (updatedProductDTO.getStatus().equals(Status.CANCELADA)) {
+            if (financialProduct.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+                throw new IllegalArgumentException("No se puede cancelar la cuenta porque el saldo debe ser CERO");
+            }
+        } else {
+            if (financialProduct.getStatus().equals(Status.CANCELADA)) {
                 throw new IllegalArgumentException("El estado de la cuenta solo puede cambiarse a 'CANCELADA' cuando el saldo es cero");
             }
         }
+
+        financialProduct.setAccountType(updatedProductDTO.getAccountType());
+        financialProduct.setStatus(updatedProductDTO.getStatus());
+        financialProduct.setBalance(updatedProductDTO.getBalance());
+        financialProduct.setExemptFromGMF(updatedProductDTO.getExemptFromGMF());
+        financialProduct.setModificationDate(LocalDateTime.now());
+        financialProductRepository.save(financialProduct);
     }
+
 
 
 

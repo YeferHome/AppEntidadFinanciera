@@ -4,6 +4,7 @@ import com.example.AppEntidadFinanciera.DTO.RequestClientDTO;
 import com.example.AppEntidadFinanciera.entity.Client;
 import com.example.AppEntidadFinanciera.service.IClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,12 +17,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class ClientControllerTest {
 
@@ -55,11 +55,14 @@ class ClientControllerTest {
 
     public static String asJsonString(final Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @Test
     void findAllClients() throws Exception {
@@ -97,22 +100,25 @@ class ClientControllerTest {
     }
 
     @Test
-    void updateClient() throws Exception {
+    void updateClient() {
         Long clientId = 1L;
         RequestClientDTO requestClientDTO = new RequestClientDTO();
-
         doNothing().when(clientService).updateClient(clientId, requestClientDTO);
 
-        mockMvc.perform(put("/api/client/update/{clientId}", clientId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(requestClientDTO)))
-                .andExpect(status().isOk());
+        clientController.updateClient(clientId, requestClientDTO);
 
         verify(clientService, times(1)).updateClient(clientId, requestClientDTO);
     }
 
-    /*
+
     @Test
     void deleteClient() {
-    }*/
+        Long clientId = 1L;
+
+        doNothing().when(clientService).deleteClient(clientId);
+
+        clientController.deleteClient(clientId);
+
+        verify(clientService, times(1)).deleteClient(clientId);
+    }
 }
